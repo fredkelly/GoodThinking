@@ -44,7 +44,8 @@ var styles = StyleSheet.create({
     flex: 1,
   },
   // TODO
-  itemWrapper: {}
+  itemWrapper: {
+  }
 });
 
 AppRegistry.registerComponent('GoodThinking', () => GoodThinking);

@@ -12,12 +12,13 @@ var {
   View,
   ListView,
   TouchableHighlight,
-  TabBarIOS,
 } = React;
+
+var ThoughtScreen = require('./ThoughtScreen');
 
 var REQUEST_URL = 'http://localhost:3000/thoughts';
 
-var GoodThinking = React.createClass({
+var ThoughtList = React.createClass({
 
   getInitialState: function() {
     return {
@@ -25,7 +26,6 @@ var GoodThinking = React.createClass({
         rowHasChanged: (row1, row2) => row1.id !== row2.id,
       }),
       loaded: false,
-      selectedTab: 'index'
     };
   },
 
@@ -51,28 +51,11 @@ var GoodThinking = React.createClass({
     }
 
     return (
-      <TabBarIOS selectedTab={this.state.selectedTab}>
-        <TabBarIOS.Item
-          selected={this.state.selectedTab === 'index'}
-          title='Thoughts'
-          onPress={() => { this.setState({selectedTab: 'index'}); }
-        }>
-          <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this.renderThought}
-            style={styles.listView}
-          />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          selected={this.state.selectedTab === 'compose'}
-          title='Compose'
-          onPress={() => { this.setState({selectedTab: 'compose'}); }
-        }>
-          <View>
-            <Text>Hello world.</Text>
-          </View>
-        </TabBarIOS.Item>
-      </TabBarIOS>
+      <ListView
+        dataSource={this.state.dataSource}
+        renderRow={this.renderThought}
+        style={styles.listView}
+      />
     );
   },
 
@@ -98,7 +81,11 @@ var GoodThinking = React.createClass({
   },
 
   showThought: function(thought) {
-    console.log(thought)
+    this.props.navigator.push({
+      title: thought.created_at,
+      component: ThoughtScreen,
+      passProps: {thought}
+    });
   },
 
 });
@@ -106,9 +93,6 @@ var GoodThinking = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
 
   thought: {
@@ -130,7 +114,6 @@ var styles = StyleSheet.create({
   listView: {
     paddingTop: 20
   },
-
 });
 
-AppRegistry.registerComponent('GoodThinking', () => GoodThinking);
+module.exports = ThoughtList;
